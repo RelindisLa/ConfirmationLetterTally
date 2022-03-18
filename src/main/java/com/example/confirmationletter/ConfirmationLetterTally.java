@@ -27,7 +27,7 @@ public class ConfirmationLetterTally {
     ) {
         Map<String, BigDecimal> result = calculateRetrieveAmounts(records, faultyRecords,
                 client, faultyAccountNumberRecordList, sansDuplicateFaultRecordsList);
-        result.put("CreditBatchTotal", creditBatchTotal(batchTotals, client.getAmountDivider()));
+        result.put("CreditBatchTotal", creditBatchTotal(batchTotals.values(), client.getAmountDivider()));
         result.put("DebitBatchTotal", debitBatchTotal(batchTotals, client));
         return result;
     }
@@ -378,9 +378,9 @@ public class ConfirmationLetterTally {
     }
 
     //nicht mehr private für Test -> Default weil weniger zugriff als bei protected
-    BigDecimal creditBatchTotal(Map<Integer, BatchTotal> batchTotals, BigDecimal amountDivider) {
+    BigDecimal creditBatchTotal(Collection<BatchTotal> batchTotals, BigDecimal amountDivider) {
         BigDecimal sum = BigDecimal.ZERO;
-        for (BatchTotal total : batchTotals.values()) {
+        for (BatchTotal total : batchTotals) {
             sum = sum.add(total.getCreditValue());
         }
         sum = sum.divide(amountDivider);

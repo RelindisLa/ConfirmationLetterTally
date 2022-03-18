@@ -7,6 +7,7 @@ import com.example.record.service.impl.Constants;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.lang.reflect.Array;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,10 +60,10 @@ public class TestConfirmationLetterTally {
 
     @Test
     public void creditBatchTotalWithoutFraction(){
-        Map<Integer, BatchTotal> batchTotals = new HashMap<>();
-        batchTotals.put(1, new BatchTotal(BigDecimal.valueOf(1000), BigDecimal.ZERO));
-        batchTotals.put(2, new BatchTotal(BigDecimal.valueOf(2000), BigDecimal.ZERO));
-        batchTotals.put(3, new BatchTotal(BigDecimal.valueOf(3000), BigDecimal.ZERO));
+        List<BatchTotal> batchTotals = new ArrayList<>();
+        batchTotals.add(new BatchTotal(BigDecimal.valueOf(1000), BigDecimal.ZERO));
+        batchTotals.add(new BatchTotal(BigDecimal.valueOf(2000), BigDecimal.ZERO));
+        batchTotals.add(new BatchTotal(BigDecimal.valueOf(3000), BigDecimal.ZERO));
 
         ConfirmationLetterTally clt = new ConfirmationLetterTally();
         BigDecimal result = clt.creditBatchTotal(batchTotals, BigDecimal.valueOf(100));
@@ -72,15 +73,15 @@ public class TestConfirmationLetterTally {
 
     @Test
     public void creditBatchTotalWithFraction(){
-        Map<Integer, BatchTotal> batchTotals = new HashMap<>();
-        batchTotals.put(1, new BatchTotal(BigDecimal.valueOf(1001), BigDecimal.ZERO));
-        batchTotals.put(2, new BatchTotal(BigDecimal.valueOf(2022), BigDecimal.ZERO));
-        batchTotals.put(3, new BatchTotal(BigDecimal.valueOf(3005), BigDecimal.ZERO));
+        List<BatchTotal> batchTotals = new ArrayList<>();
+        batchTotals.add(new BatchTotal(BigDecimal.valueOf(1001), BigDecimal.ZERO));
+        batchTotals.add(new BatchTotal(BigDecimal.valueOf(2022), BigDecimal.ZERO));
+        batchTotals.add(new BatchTotal(BigDecimal.valueOf(3003), BigDecimal.ZERO));
 
         ConfirmationLetterTally clt = new ConfirmationLetterTally();
         BigDecimal result = clt.creditBatchTotal(batchTotals, BigDecimal.valueOf(100));
 
-        Assert.assertEquals(BigDecimal.valueOf(60.28), result);
+        Assert.assertEquals(BigDecimal.valueOf(60.26), result);
     }
 
 
