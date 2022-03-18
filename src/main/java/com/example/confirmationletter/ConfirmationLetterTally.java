@@ -27,7 +27,7 @@ public class ConfirmationLetterTally {
     ) {
         Map<String, BigDecimal> result = calculateRetrieveAmounts(records, faultyRecords,
                 client, faultyAccountNumberRecordList, sansDuplicateFaultRecordsList);
-        result.put("CreditBatchTotal", creditBatchTotal(batchTotals, client));
+        result.put("CreditBatchTotal", creditBatchTotal(batchTotals, client.getAmountDivider()));
         result.put("DebitBatchTotal", debitBatchTotal(batchTotals, client));
         return result;
     }
@@ -378,16 +378,12 @@ public class ConfirmationLetterTally {
     }
 
     //nicht mehr private für Test -> Default weil weniger zugriff als bei protected
-    BigDecimal creditBatchTotal(Map<Integer, BatchTotal> batchTotals, Client client) {
+    BigDecimal creditBatchTotal(Map<Integer, BatchTotal> batchTotals, BigDecimal amountDivider) {
         BigDecimal sum = BigDecimal.ZERO;
-        Iterator<BatchTotal> itr = batchTotals.values().iterator();
-        while (itr.hasNext()) {
-            BatchTotal total = itr.next();
-
+        for (BatchTotal total : batchTotals.values()) {
             sum = sum.add(total.getCreditValue());
         }
-        BigDecimal divider = new BigDecimal(client.getAmountDivider()); //STRG+P -> zeigt möglichkeiten in intelliJ
-        sum = sum.divide(divider);
+        sum = sum.divide(amountDivider);
         return sum;
     }
     private BigDecimal debitBatchTotal(Map<Integer, BatchTotal> batchTotals,
@@ -398,7 +394,7 @@ public class ConfirmationLetterTally {
             BatchTotal total = itr.next();
             sum = sum + total.getCreditCounterValueForDebit().doubleValue();
         }
-        Double d = sum / new Double(client.getAmountDivider());
+        Double d = sum / new Double(client.getAmountDividerString());
         return new BigDecimal(d);
     }
 

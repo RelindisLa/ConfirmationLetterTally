@@ -59,32 +59,26 @@ public class TestConfirmationLetterTally {
 
     @Test
     public void creditBatchTotalWithoutFraction(){
-        Map<String, String> profile = new HashMap<>();
-        Client client = new Client(profile, "+", "false", "100");
-
         Map<Integer, BatchTotal> batchTotals = new HashMap<>();
         batchTotals.put(1, new BatchTotal(BigDecimal.valueOf(1000), BigDecimal.ZERO));
         batchTotals.put(2, new BatchTotal(BigDecimal.valueOf(2000), BigDecimal.ZERO));
         batchTotals.put(3, new BatchTotal(BigDecimal.valueOf(3000), BigDecimal.ZERO));
 
         ConfirmationLetterTally clt = new ConfirmationLetterTally();
-        BigDecimal result = clt.creditBatchTotal(batchTotals, client);
+        BigDecimal result = clt.creditBatchTotal(batchTotals, BigDecimal.valueOf(100));
 
         Assert.assertEquals(BigDecimal.valueOf(60), result);
     }
 
     @Test
     public void creditBatchTotalWithFraction(){
-        Map<String, String> profile = new HashMap<>();
-        Client client = new Client(profile, "+", "false", "100");
-
         Map<Integer, BatchTotal> batchTotals = new HashMap<>();
         batchTotals.put(1, new BatchTotal(BigDecimal.valueOf(1001), BigDecimal.ZERO));
         batchTotals.put(2, new BatchTotal(BigDecimal.valueOf(2022), BigDecimal.ZERO));
         batchTotals.put(3, new BatchTotal(BigDecimal.valueOf(3005), BigDecimal.ZERO));
 
         ConfirmationLetterTally clt = new ConfirmationLetterTally();
-        BigDecimal result = clt.creditBatchTotal(batchTotals, client);
+        BigDecimal result = clt.creditBatchTotal(batchTotals, BigDecimal.valueOf(100));
 
         Assert.assertEquals(BigDecimal.valueOf(60.28), result);
     }
