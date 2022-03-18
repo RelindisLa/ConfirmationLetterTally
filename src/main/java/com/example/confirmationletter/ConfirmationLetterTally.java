@@ -27,8 +27,8 @@ public class ConfirmationLetterTally {
     ) {
         Map<String, BigDecimal> result = calculateRetrieveAmounts(records, faultyRecords,
                 client, faultyAccountNumberRecordList, sansDuplicateFaultRecordsList);
-        result.put("CreditBatchTotal", creditBatchTotal(batchTotals.values(), client.getAmountDivider()));
-        result.put("DebitBatchTotal", debitBatchTotal(batchTotals, client));
+        result.put("CreditBatchTotal", creditBatchTotal(batchTotals.values(), client.getAmountDivider(),BatchTotal::getCreditValue));
+        result.put("DebitBatchTotal", creditBatchTotal(batchTotals.values(), client.getAmountDivider(), BatchTotal::getCreditCounterValueForDebit));
         return result;
     }
 
@@ -377,25 +377,20 @@ public class ConfirmationLetterTally {
         return retrievedAmounts;
     }
 
+    interface BatchValueAccessor {
+        BigDecimal get(BatchTotal batchTotal);
+        //BigDecimal --> return value of Function
+        //batch Total --> parameter of Value
+    }
+
     //nicht mehr private für Test -> Default weil weniger zugriff als bei protected
-    BigDecimal creditBatchTotal(Collection<BatchTotal> batchTotals, BigDecimal amountDivider) {
+    BigDecimal creditBatchTotal(Collection<BatchTotal> batchTotals, BigDecimal amountDivider, BatchValueAccessor valueAccessor) {
         BigDecimal sum = BigDecimal.ZERO;
         for (BatchTotal total : batchTotals) {
-            sum = sum.add(total.getCreditValue());
+            sum = sum.add(valueAccessor.get(total)); //total.getCreditValue();
         }
         sum = sum.divide(amountDivider);
         return sum;
-    }
-    private BigDecimal debitBatchTotal(Map<Integer, BatchTotal> batchTotals,
-                                       Client client) {
-        Double sum = new Double(0);
-        Iterator<BatchTotal> itr = batchTotals.values().iterator();
-        while (itr.hasNext()) {
-            BatchTotal total = itr.next();
-            sum = sum + total.getCreditCounterValueForDebit().doubleValue();
-        }
-        Double d = sum / new Double(client.getAmountDividerString());
-        return new BigDecimal(d);
     }
 
 

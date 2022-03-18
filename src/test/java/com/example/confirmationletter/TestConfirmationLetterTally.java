@@ -66,7 +66,7 @@ public class TestConfirmationLetterTally {
         batchTotals.add(new BatchTotal(BigDecimal.valueOf(3000), BigDecimal.ZERO));
 
         ConfirmationLetterTally clt = new ConfirmationLetterTally();
-        BigDecimal result = clt.creditBatchTotal(batchTotals, BigDecimal.valueOf(100));
+        BigDecimal result = clt.creditBatchTotal(batchTotals, BigDecimal.valueOf(100),BatchTotal::getCreditValue);
 
         Assert.assertEquals(BigDecimal.valueOf(60), result);
     }
@@ -79,7 +79,7 @@ public class TestConfirmationLetterTally {
         batchTotals.add(new BatchTotal(BigDecimal.valueOf(3003), BigDecimal.ZERO));
 
         ConfirmationLetterTally clt = new ConfirmationLetterTally();
-        BigDecimal result = clt.creditBatchTotal(batchTotals, BigDecimal.valueOf(100));
+        BigDecimal result = clt.creditBatchTotal(batchTotals, BigDecimal.valueOf(100),BatchTotal::getCreditValue);
 
         Assert.assertEquals(BigDecimal.valueOf(60.26), result);
     }
