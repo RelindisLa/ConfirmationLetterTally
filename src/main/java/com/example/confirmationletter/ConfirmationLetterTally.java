@@ -357,11 +357,9 @@ public class ConfirmationLetterTally {
             } else {
                 totalDebitEUR = recordAmountDebitEUR;
             }
-            // logger.info("totalDebitEUR "+totalDebitEUR);
 
             if (retrievedAccountNumberAmounts.get("FaultyAccCreditEUR") != null
                     && amountSansCreditEUR != null) {
-                // logger.debug("retrievedAccountNumberAmounts.get(FaultyAccCreditEUR):"+retrievedAccountNumberAmounts.get("FaultyAccCreditEUR"));
                 totalCreditEUR = recordAmountCreditEUR.add(amountSansCreditEUR)
                         .subtract(
                                 retrievedAccountNumberAmounts
