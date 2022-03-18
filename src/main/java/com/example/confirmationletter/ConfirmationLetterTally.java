@@ -188,7 +188,6 @@ public class ConfirmationLetterTally {
         else {
 
             for (Record record : records) {
-//                logger.debug("COUNTERTRANSFER ["+record.getIsCounterTransferRecord()+"] FEERECORD ["+record.getFeeRecord()+"]");
                 if (record.getIsCounterTransferRecord().compareTo(new Integer(0)) == 0
                         && record.getFeeRecord().compareTo(new Integer(0)) == 0) {
                     if ((record.getCurrency().getCode().equals(
@@ -378,17 +377,18 @@ public class ConfirmationLetterTally {
         return retrievedAmounts;
     }
 
-    private BigDecimal creditBatchTotal(Map<Integer, BatchTotal> batchTotals,
-                                        Client client) {
-        Double sum = new Double(0);
+    //nicht mehr private für Test -> Default weil weniger zugriff als bei protected
+    BigDecimal creditBatchTotal(Map<Integer, BatchTotal> batchTotals, Client client) {
+        BigDecimal sum = BigDecimal.ZERO;
         Iterator<BatchTotal> itr = batchTotals.values().iterator();
         while (itr.hasNext()) {
             BatchTotal total = itr.next();
 
-            sum = sum + total.getCreditValue().doubleValue();
+            sum = sum.add(total.getCreditValue());
         }
-        Double d = sum / new Double(client.getAmountDivider());
-        return new BigDecimal(d);
+        BigDecimal divider = new BigDecimal(client.getAmountDivider()); //STRG+P -> zeigt möglichkeiten in intelliJ
+        sum = sum.divide(divider);
+        return sum;
     }
     private BigDecimal debitBatchTotal(Map<Integer, BatchTotal> batchTotals,
                                        Client client) {
